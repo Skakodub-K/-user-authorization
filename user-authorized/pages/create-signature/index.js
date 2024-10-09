@@ -14,7 +14,7 @@ export default function CreateSignature() {
 
   // Нажали кнопку "Сгенерировать ключи"
   const handleKeyGen = async (e) => {
-    const response = await fetch('/api/createKeys', {method: 'POST'});
+    const response = await fetch('/api/createKeys', { method: 'POST' });
 
     if (response.ok) {
       const data = await response.json();
@@ -30,7 +30,30 @@ export default function CreateSignature() {
     setFile(e.target.files[0]);
   };
   // Нажали кнопку подписать
-  const handleSign = async (e) => {};
+  const handleSign = async (e) => {
+    e.preventDefault(); // Предотвращаем обновление страницы
+    // Создаем FormData
+    const formData = new FormData();
+    formData.append('file', file, 'myfile.bin'); // Добавляем бинарные данные
+    formData.append('openKey', openKey); // Добавляем текстовые данные
+    formData.append('privateKey', privateKey); // Добавляем текстовые данные
+
+    try {
+      const response = await fetch('/api/createSign', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ошибка: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error('Ошибка при отправке:', error);
+    }
+  };
 
   return (
     <div>
