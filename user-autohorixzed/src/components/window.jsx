@@ -8,7 +8,6 @@ export default function WindowForm(props) {
   const { mode, exit } = props;
   return (
     <div className="window">
-      {mode ? <CreateForm /> : <CheckForm />}
       <div
         className="count-particles exit-buttton"
         onClick={() => {
@@ -17,6 +16,7 @@ export default function WindowForm(props) {
       >
         X
       </div>
+      {mode ? <CreateForm /> : <CheckForm />}
     </div>
   );
 }
