@@ -1,0 +1,65 @@
+html {
+  background: #808080;
+}
+#particles-js {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(90deg, #f24645, #4f00bc);
+}
+.count-particles {
+  box-sizing: border-box;
+  position: relative;
+  width: 200px;
+  height: 100px;
+  background-color: white;
+  z-index: 2;
+  margin: 50px auto;
+  text-align: center;
+  font-size: 29px;
+  background: linear-gradient(90deg, #808080, #e6e6e6);
+  border-radius: 10px;
+  padding: 31px;
+  color: green;
+  box-shadow: 0 0 30px #fff, 0 0 50px #fff inset;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 0 0 50px #44c1eb, 0 0 50px #44c1eb inset;
+    color: #44c1eb;
+  }
+}
+.app-header{
+  color: #fff;
+  position: relative;
+  width: 40vw;
+  z-index: 2;
+  top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.exit-buttton{
+  padding: 8px;
+  top: -70px;
+  width: 50px;
+  height: 50px;
+  left: 290px;
+}
+.button-container {
+  position: relative;
+  top: 3vh;
+  display: flex;
+  flex-direction: row;
+  gap: 1%;
+  justify-content: center;
+}
+.window {
+  width: 45vw;
+  height: 85vh;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+  position: relative;
+  z-index: 2;
+}
