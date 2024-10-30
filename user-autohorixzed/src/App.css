@@ -171,7 +171,7 @@ html {
   border-radius: 10px;
   color: white;
 }
-.key-button{
+.key-button {
   background: #95008d;
   color: #fff;
   padding: 25px;
@@ -181,4 +181,9 @@ html {
   border-radius: 20px;
   position: relative;
   top:8vh;
+}
+.key-button:hover{
+  cursor: pointer;
+  box-shadow: 0 0 50px #44c1eb, 0 0 50px #44c1eb inset;
+  color: #44c1eb;
 }
