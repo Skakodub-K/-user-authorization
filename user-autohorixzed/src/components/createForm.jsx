@@ -8,6 +8,17 @@ export default function CreateForm() {
   const [signature, setSignature] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const generateKeysHandler =async () => {
+    const res = await fetch('http://localhost:5000/createKeys');
+            //.then(response => response.text())
+            //.then(data => setOpenKey(data))
+            //.catch(err => console.error(err));
+            debugger;
+            console.log('gosha-test');
+            setPrivateKey('gosha');
+            setOpenKey('gosha');
+  }
+
   useEffect(() => {
     document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
       const dropZoneElement = inputElement.closest(".drop-zone");
@@ -93,15 +104,17 @@ export default function CreateForm() {
       <div className="text-container">
         <div id="pad">
           <center>Закрытый ключ</center>
-          <textarea class="textarea"></textarea>
+          <textarea class="textarea" value = {privateKey}></textarea>
         </div>
         <div id="pad">
           <center>Открытый ключ</center>
-          <textarea class="textarea"></textarea>
+          <textarea class="textarea" value = {openKey}></textarea>
         </div>
       </div>
       <div className="text-container">
-        <button className="key-button" onClick={(e) => {}}>
+        <button className="key-button" onClick={(e) => {
+          generateKeysHandler();
+        }}>
           Сгенерировать
         </button>
         <button className="key-button" onClick={(e) => {}}>
