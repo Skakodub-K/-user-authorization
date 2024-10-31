@@ -8,15 +8,19 @@ export default function CreateForm() {
   const [signature, setSignature] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const generateKeysHandler =async () => {
-    const res = await fetch('http://localhost:5000/createKeys');
-            //.then(response => response.text())
-            //.then(data => setOpenKey(data))
-            //.catch(err => console.error(err));
-            debugger;
-            console.log('gosha-test');
-            setPrivateKey('gosha');
-            setOpenKey('gosha');
+  const generateKeysHandler = async () => {
+    const response = await fetch('http://localhost:5000/createKeys');
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const dataJSON = await response.json();
+    // Преобразование JSON-строки в JavaScript-объект
+    const keys = JSON.parse(dataJSON);
+    
+    setPrivateKey(keys.privateKey);
+    setOpenKey(keys.openKey);
   }
 
   useEffect(() => {
@@ -104,11 +108,13 @@ export default function CreateForm() {
       <div className="text-container">
         <div id="pad">
           <center>Закрытый ключ</center>
-          <textarea class="textarea" value = {privateKey}></textarea>
+          <textarea class="textarea" value = {privateKey} onChange={(event)=> setPrivateKey(event.target.value)}>
+          </textarea>
         </div>
         <div id="pad">
           <center>Открытый ключ</center>
-          <textarea class="textarea" value = {openKey}></textarea>
+          <textarea class="textarea" value = {openKey} onChange={(event)=> setOpenKey(event.target.value)}>
+          </textarea>
         </div>
       </div>
       <div className="text-container">

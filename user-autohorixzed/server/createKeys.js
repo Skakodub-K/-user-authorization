@@ -1,11 +1,9 @@
-async function handler(req, res) {
+function handler(req, res) {
     // Создаём ключи
     const { privateKey, openKey } = createSign();
-    return res.status(200).json({
-        privateKey,
-        openKey
-    });
-
+    // Преобразование в JSON
+    const jsonKeys = JSON.stringify({ privateKey, openKey });
+    return jsonKeys;
 }
 function createSign() {
     // Модуль
