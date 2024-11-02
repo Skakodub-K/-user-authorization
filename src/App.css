@@ -161,7 +161,8 @@ html {
 }
 #pad {
   display: inline-block;
-  padding: 10px;
+  /*padding: 10px;*/
+  padding-left: 4px;
   padding-top: 4px;
   padding-bottom: 4px;
   color: white;
@@ -170,6 +171,11 @@ html {
   position: relative;
   top: 10vh;
   margin-right: 5vw;
+}
+.sign-pad {
+  position: relative;
+  top: 10vh;
+  margin-left: 5vw;
 }
 .key-button {
   padding: 25px;
