@@ -3,7 +3,7 @@ const {modularExponentiation, gcd} = require('./calculations.js');
 
 function generateSignature(openKey, privateKey, hash) {
     // Преобразуем строку в число (BigInt)
-    const bigIntNumber = BigInt('123123123')//hash);
+    const bigIntNumber = BigInt("0x" + hash);
 
     const o = Number(openKey);
     const c = Number(privateKey);

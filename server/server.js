@@ -5,6 +5,7 @@ const multer = require('multer');
 // Импортируем функции
 const createKeys = require('./createKeys.js'); 
 const generateSignature = require('./generateSignature.js')
+const checkSignature = require('./checkSignature.js')
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,6 +31,17 @@ app.post('/generateSignature', upload.none(), (req, res) => {
     const result = generateSignature(openKey, privateKey, hash);
     res.json({ res: result });
 });
+
+app.post('/checkSignature', upload.none(), (req, res) => {
+    // Доступ к данным формы
+    const formData = req.body;
+    console.log(formData);
+    const openKey = formData.openKey;
+    const signature = formData.signature;
+    const hash = formData.hash;
+    const result = checkSignature(openKey, signature, hash);
+    res.json({ res: result });
+})
 
 // Добавьте другие маршруты по мере необходимости
 

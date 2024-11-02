@@ -66,7 +66,6 @@ export default function CreateForm() {
       const keys = formData.keys();
       const keyss = formData.getAll("test");
 
-
       const response = await fetch('http://localhost:5000/generateSignature', {
         method: 'POST',
         body: formData,
@@ -83,7 +82,6 @@ export default function CreateForm() {
       console.error('Error hashing the file:', error);
     }
   }
-
 
   const generateKeys = async () => {
     const response = await fetch('http://localhost:5000/createKeys');
