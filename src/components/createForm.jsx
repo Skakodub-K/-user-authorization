@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import CryptoJS from 'crypto-js';
+import hashFile from "../hash";
 
 export default function CreateForm() {
   // Файл
@@ -21,31 +21,6 @@ export default function CreateForm() {
     }
   };
 
-  // Хешеривоние файла
-  const hashFile = async (file) => {
-    return new Promise((resolve, reject) => {
-      // Создаем reader
-      const reader = new FileReader();
-      
-      // Обрабатываем завершение чтения всего файла
-      reader.onload = (e) => {
-        // Получаем ArrayBuffer
-        const arrayBuffer = e.target.result;
-        // Преобразуем в массив байтов
-        const bytes = new Uint8Array(arrayBuffer);
-        // Создаем WordArray из массива байтов
-        const wordArray = CryptoJS.lib.WordArray.create(bytes);
-        // Вычисляем SHA-256 хеш
-        const hash = CryptoJS.SHA256(wordArray).toString();
-        resolve(hash);
-      };
-      // Обработка неуспешного завершения операции
-      reader.onerror = (error) => reject(error);
-      
-      // Читаем файл как ArrayBuffer
-      reader.readAsArrayBuffer(file);
-    });
-  };
 
   // Создание подписи
   const generateSignature = async (event) => {

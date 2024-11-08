@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import DragAndDrop from "./DragAndDrop";
+import hashFile from "../hash";
 
 export default function CheckForm() {
   // Файл
@@ -22,7 +23,7 @@ export default function CheckForm() {
       const formData = new FormData();
       formData.append('hash', hash);
       formData.append('openKey', openKey);
-      formData.append('privateKey', privateKey);
+      //formData.append('privateKey', privateKey);
       formData.append("test", "test");
       const keys = formData.keys();
       const keyss = formData.getAll("test");
