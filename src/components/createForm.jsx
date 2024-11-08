@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import hashFile from "../hash";
+import DragAndDrop from "./DragAndDrop";
 
 export default function CreateForm() {
   // Файл
@@ -20,7 +21,6 @@ export default function CreateForm() {
       setFile(selectedFile);
     }
   };
-
 
   // Создание подписи
   const generateSignature = async (event) => {
@@ -49,6 +49,7 @@ export default function CreateForm() {
       if (response.ok){
         console.log('File uploaded successfully!');
         const dataJSON = await response.json();
+        setSignature(dataJSON.res.join(" "));
         console.log(dataJSON);
       }
       else
@@ -148,21 +149,17 @@ export default function CreateForm() {
   return (
     <div className="create-form_container">
       <h1 className="app-header">Cоздать ЭЦП</h1>
-      <div className="drop-zone">
-        <span className="drop-zone__prompt">
-          Drop file here or click to upload
-        </span>
-        <input type="file" name="myFile" className="drop-zone__input" onChange={handleFileChange} />
-      </div>
+      <DragAndDrop Handler={handleFileChange}/>
       <div className="text-container">
         <div id="pad">
           <center>Закрытый ключ</center>
-          <textarea class="textarea" value={privateKey} onChange={(event) => setPrivateKey(event.target.value)}>
+          <textarea className="textarea" value={privateKey} onChange={(event) => setPrivateKey(event.target.value)}>
           </textarea>
         </div>
+        <span className="signature">{signature}</span>
         <div id="pad">
           <center>Открытый ключ</center>
-          <textarea class="textarea" value={openKey} onChange={(event) => setOpenKey(event.target.value)}>
+          <textarea className="textarea" value={openKey} onChange={(event) => setOpenKey(event.target.value)}>
           </textarea>
         </div>
       </div>

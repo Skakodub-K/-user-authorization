@@ -130,6 +130,9 @@ html {
   top: 10vh;
   gap: 20%;
 }
+.signature {
+  display: inline;
+}
 .textarea {
   box-shadow: 2px 3px 30px #000;
   resize: none;

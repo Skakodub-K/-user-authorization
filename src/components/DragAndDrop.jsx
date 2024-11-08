@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-export default function DragAndDrop() {
+export default function DragAndDrop(props) {
   useEffect(() => {
     document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
       const dropZoneElement = inputElement.closest(".drop-zone");
@@ -77,7 +77,7 @@ export default function DragAndDrop() {
       <span className="drop-zone__prompt">
         Drop file here or click to upload
       </span>
-      <input type="file" name="myFile" className="drop-zone__input" />
+      <input type="file" name="myFile" className="drop-zone__input" onChange={props.Handler}/>
     </div>
   );
 }
