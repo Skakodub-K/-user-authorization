@@ -128,10 +128,17 @@ html {
   justify-content: center;
   position: relative;
   top: 10vh;
-  gap: 20%;
+  gap: 10%;
 }
 .signature {
   display: inline;
+  position: relative;
+  top:100px;
+}
+.result-view{
+  display: block;
+  position: relative;
+  top: 30px;
 }
 .textarea {
   box-shadow: 2px 3px 30px #000;
@@ -164,7 +171,6 @@ html {
 }
 #pad {
   display: inline-block;
-  /*padding: 10px;*/
   padding-left: 4px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -173,7 +179,7 @@ html {
 .check-pad {
   position: relative;
   top: 10vh;
-  margin-right: 5vw;
+  margin-left: 8vw;
 }
 .sign-pad {
   position: relative;
@@ -195,7 +201,8 @@ html {
   font-weight: 600;
   border-radius: 20px;
   position: relative;
-  top: 3vh;
+  top: 15vh;
+  margin: 0 40%;
 }
 @keyframes iconAnim {
   0% {
@@ -210,6 +217,6 @@ html {
 }
 .create-icon {
   position: absolute;
-  left: 380px;
+  left: -15px;
   animation: iconAnim 2s;
 }

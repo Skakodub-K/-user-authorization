@@ -11,58 +11,47 @@ export default function CreateForm() {
   const [openKey, setOpenKey] = useState("");
   // Подпись
   const [signature, setSignature] = useState("");
-
   const [errorMessage, setErrorMessage] = useState("");
-
-  // Хендлер изменения файла
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-    }
-  };
 
   // Создание подписи
   const generateSignature = async (event) => {
     if (!file) {
-      console.warn('No file selected.');
+      console.warn("No file selected.");
       return;
     }
     try {
       const hash = await hashFile(file);
-      console.log('File hash:', hash);
+      console.log("File hash:", hash);
 
       // Отправляем хеш и ключи на сервер с использованием fetch API
       const formData = new FormData();
-      formData.append('hash', hash);
-      formData.append('openKey', openKey);
-      formData.append('privateKey', privateKey);
+      formData.append("hash", hash);
+      formData.append("openKey", openKey);
+      formData.append("privateKey", privateKey);
       formData.append("test", "test");
       const keys = formData.keys();
       const keyss = formData.getAll("test");
 
-      const response = await fetch('http://localhost:5000/generateSignature', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/generateSignature", {
+        method: "POST",
         body: formData,
       });
 
-      if (response.ok){
-        console.log('File uploaded successfully!');
+      if (response.ok) {
+        console.log("File uploaded successfully!");
         const dataJSON = await response.json();
         setSignature(dataJSON.res.join(" "));
         console.log(dataJSON);
-      }
-      else
-        console.error('Upload failed:', response.statusText);
+      } else console.error("Upload failed:", response.statusText);
     } catch (error) {
-      console.error('Error hashing the file:', error);
+      console.error("Error hashing the file:", error);
     }
-  }
+  };
 
   const generateKeys = async () => {
-    const response = await fetch('http://localhost:5000/createKeys');
+    const response = await fetch("http://localhost:5000/createKeys");
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     const dataJSON = await response.json();
@@ -71,7 +60,7 @@ export default function CreateForm() {
 
     setPrivateKey(keys.privateKey);
     setOpenKey(keys.openKey);
-  }
+  };
 
   useEffect(() => {
     document.querySelectorAll(".drop-zone__input").forEach((inputElement) => {
@@ -149,29 +138,47 @@ export default function CreateForm() {
   return (
     <div className="create-form_container">
       <h1 className="app-header">Cоздать ЭЦП</h1>
-      <DragAndDrop Handler={handleFileChange}/>
+      <DragAndDrop uploadFile={setFile} />
       <div className="text-container">
         <div id="pad">
           <center>Закрытый ключ</center>
-          <textarea className="textarea" value={privateKey} onChange={(event) => setPrivateKey(event.target.value)}>
-          </textarea>
+          <textarea
+            className="textarea"
+            value={privateKey}
+            onChange={(event) => setPrivateKey(event.target.value)}
+          ></textarea>
         </div>
-        <span className="signature">{signature}</span>
+          {signature ? (
+            <div className="result-view">
+              <img className="create-icon" src="./iconCrt.png" alt="icon"></img>
+              <span className="signature">{signature}</span>
+            </div>
+          ):(<></>)
+          }
         <div id="pad">
           <center>Открытый ключ</center>
-          <textarea className="textarea" value={openKey} onChange={(event) => setOpenKey(event.target.value)}>
-          </textarea>
+          <textarea
+            className="textarea"
+            value={openKey}
+            onChange={(event) => setOpenKey(event.target.value)}
+          ></textarea>
         </div>
       </div>
       <div className="text-container">
-        <button className="key-button" onClick={(e) => {
-          generateKeys();
-        }}>
+        <button
+          className="count-particles key-button"
+          onClick={(e) => {
+            generateKeys();
+          }}
+        >
           Сгенерировать
         </button>
-        <button className="key-button" onClick={(e) => {
-          generateSignature();
-        }}>
+        <button
+          className="count-particles key-button"
+          onClick={(e) => {
+            generateSignature();
+          }}
+        >
           Подписать
         </button>
       </div>
