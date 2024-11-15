@@ -30,7 +30,32 @@ function gcd(a, b) {
     return a;
 }
 
+// Расширенный Алгоритм Евклида
+function extendedGCD(a, b) {
+    let s = 0, old_s = 1;
+    let t = 1, old_t = 0;
+    let r = b, old_r = a;
+
+    while (r !== 0) {
+        const quotient = Math.floor(old_r / r);
+        let temp = r;
+        r = old_r - quotient * r;
+        old_r = temp;
+        
+        temp = s;
+        s = old_s - quotient * s;
+        old_s = temp;
+        
+        temp = t;
+        t = old_t - quotient * t;
+        old_t = temp;
+    }
+
+    return { gcd: old_r, x: old_s, y: old_t };
+}
+
 module.exports = {
     modularExponentiation,
-    gcd
+    gcd,
+    extendedGCD
 };
