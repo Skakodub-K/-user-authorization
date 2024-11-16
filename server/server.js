@@ -37,9 +37,9 @@ app.post('/checkSignature', upload.none(), (req, res) => {
     const formData = req.body;
     console.log(formData);
     const openKey = formData.openKey;
-    const signature = formData.signature;
+    const signature = formData.signature.split(" ");
     const hash = formData.hash;
-    const result = checkSignature(openKey, signature, hash);
+    const result = checkSignature(openKey, signature[0], signature[1], hash);
     res.json({ res: result });
 })
 

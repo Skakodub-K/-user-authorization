@@ -5,7 +5,7 @@ import hashFile from "../hash";
 export default function CheckForm() {
   // Файл
   const [file, setFile] = useState(null);
-  // Закрытый ключ
+  // Подпись
   const [signature, setSignature] = useState("");
   // Открытый ключ
   const [openKey, setOpenKey] = useState("");
@@ -23,9 +23,7 @@ export default function CheckForm() {
       const formData = new FormData();
       formData.append("hash", hash);
       formData.append("openKey", openKey);
-      formData.append("test", "test");
-      const keys = formData.keys();
-      const keyss = formData.getAll("test");
+      formData.append("signature", signature);
 
       const response = await fetch("http://localhost:5000/checkSignature", {
         method: "POST",
