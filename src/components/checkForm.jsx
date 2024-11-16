@@ -5,16 +5,21 @@ import hashFile from "../hash";
 export default function CheckForm() {
   // Файл
   const [file, setFile] = useState(null);
+  const [fileWarning, setFileWarning] = useState(false);
   // Подпись
   const [signature, setSignature] = useState("");
   // Открытый ключ
   const [openKey, setOpenKey] = useState("");
+  // Проверка успешна или нет
+  const [isCheck, setIsCheck] = useState(null);
 
   const handleCheckSign = async () => {
     if (!file) {
-      console.warn("No file selected.");
+      setFileWarning(true);
       return;
     }
+    // Reset any previous warnings
+    setFileWarning(false);
     try {
       const hash = await hashFile(file);
       console.log("File hash:", hash);
@@ -31,13 +36,35 @@ export default function CheckForm() {
       });
 
       if (response.ok) {
-        console.log("File uploaded successfully!");
         const dataJSON = await response.json();
-        console.log(dataJSON);
-      } else console.error("Upload failed:", response.statusText);
+        setIsCheck(dataJSON.res);
+      } else {
+        console.error("Upload failed:", response.statusText);
+      }
     } catch (error) {
       console.error("Error hashing the file:", error);
     }
+  };
+
+  const renderFeedback = () => {
+    if (fileWarning) {
+      return (
+        <div>
+          <div className="feedback error">🔴 Прикрепите, пожалуйста, файл.</div>
+          <button className="ok-button" onClick={() => setFileWarning(false)}>OK</button>
+        </div>
+      );
+    }
+
+    if (isCheck !== null) {
+      return (
+        <div className={`feedback ${isCheck ? "success" : "error"}`}>
+          {isCheck ? "✅ Подпись действительна!" : "❌ Подпись недействительна!"}
+        </div>
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -62,11 +89,10 @@ export default function CheckForm() {
           onChange={(event) => setSignature(event.target.value)}
         ></textarea>
       </div>
+      {renderFeedback()}
       <button
         className="count-particles check-button"
-        onClick={(e) => {
-          handleCheckSign();
-        }}
+        onClick={handleCheckSign}
       >
         Проверить
       </button>

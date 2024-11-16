@@ -133,9 +133,9 @@ html {
 .signature {
   display: inline;
   position: relative;
-  top:100px;
+  top: 100px;
 }
-.result-view{
+.result-view {
   display: block;
   position: relative;
   top: 30px;
@@ -202,6 +202,8 @@ html {
   border-radius: 20px;
   position: relative;
   top: 15vh;
+  left:160px;
+  
   margin: 0 40%;
 }
 @keyframes iconAnim {
@@ -219,4 +221,36 @@ html {
   position: absolute;
   left: -15px;
   animation: iconAnim 2s;
+}
+.feedback {
+  position: relative;
+  top: 190px;
+  font-size: 1.2rem;
+  left: 55px;
+  width: fit-content;
+}
+
+.success {
+  color: green;
+}
+
+.error {
+  color: red;
+}
+.ok-button {
+  position: absolute;
+  padding: 8px 12px;
+  bottom: -140px;
+  left: 180px;
+  width: 70px;
+  background-color: #992f2f70;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.ok-button:hover {
+  cursor: pointer;
+  background-color: red;
 }
