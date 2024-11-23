@@ -54,8 +54,79 @@ function extendedGCD(a, b) {
     return { gcd: old_r, x: old_s, y: old_t };
 }
 
+// Решето Эратосфена
+function sieveOfEratosthenes(n) {
+    // заполняем решето единицами
+    const sieve = Array(n).fill(true);
+    // 1 - не простое число
+    sieve[0] = false;
+
+    /*
+    Можно зачеркивать, начиная сразу с числа p2, потому что все меньшие числа,
+    кратные p, обязательно имеют простой делитель меньше p,
+    и они уже будут зачеркнуты к этому времени. 
+    И, соответственно, останавливать алгоритм можно,
+    когда p2 станет больше, чем n.
+    */
+     
+    // Вычеркнем кратные 2
+    for (l = 4; l <= n; l += 2) {
+        sieve[l] = false;
+    }
+    /*
+    Кроме того, все простые числа, кроме 2, — нечётные числа,
+    и поэтому для них можно считать шагами по 2p, начиная с p2.
+    */
+
+    for (p = 3; p * p <= n; p++) {
+        // если k - простое (не вычеркнуто)
+        if (sieve[p]) {
+            // то вычеркнем кратные k
+            for (l = p * p; l <= n; l += p) {
+                sieve[l] = false;
+            }
+        }
+    }
+    return sieve;
+}
+
+function eulerPhi(n) {
+    return n-1;
+}
+
+// Функция для проверки, является ли число g первообразным корнем по модулю m
+function isPrimitiveRoot(g, m) {
+    // Находим функцию эйлера от m
+    let phiM = eulerPhi(m);
+    // Простые делители phiM
+    const primeFactors = [];
+
+    // Находим простые делители phiM
+    for (let factor = 2; factor * factor <= phiM; ++factor) {
+        if (phiM % factor === 0) {
+            primeFactors.push(factor);
+            while (phiM % factor === 0) {
+                phiM /= factor;
+            }
+        }
+    }
+    if (phiM > 1)
+        primeFactors.push(phiM);
+
+    // Проверяем, что g^(phiM/q) != 1 (mod m) для всех простых делителей q
+    for (const q of primeFactors) {
+        if (modularExponentiation(g, phiM / q, m) === 1)
+            return false;
+    }
+
+    // Проверяем, что g^phiM == 1 (mod m)
+    return modularExponentiation(g, phiM, m) === 1;
+}
+
 module.exports = {
     modularExponentiation,
     gcd,
-    extendedGCD
+    extendedGCD,
+    sieveOfEratosthenes,
+    isPrimitiveRoot
 };

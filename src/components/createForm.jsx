@@ -29,8 +29,6 @@ export default function CreateForm() {
       formData.append("openKey", openKey);
       formData.append("privateKey", privateKey);
       formData.append("test", "test");
-      const keys = formData.keys();
-      const keyss = formData.getAll("test");
 
       const response = await fetch("http://localhost:5000/generateSignature", {
         method: "POST",
@@ -59,7 +57,9 @@ export default function CreateForm() {
     const keys = JSON.parse(dataJSON);
 
     setPrivateKey(keys.privateKey);
-    setOpenKey(keys.openKey);
+    setOpenKey(
+      `openKey: ${keys.openKey.openKey}\nbase: ${keys.openKey.base}\nmod: ${keys.openKey.mod}`
+      );
   };
 
   useEffect(() => {

@@ -1,17 +1,13 @@
 // Импортируем функции
 const {modularExponentiation, gcd, extendedGCD} = require('./calculations.js'); 
 
-function generateSignature(openKey, privateKey, hash) {
+function generateSignature(openKey, base, mod, privateKey, hash) {
     // Преобразуем строку в число (BigInt)
     const bigIntNumber = BigInt("0x" + hash);
 
     const o = Number(openKey);
     const c = Number(privateKey);
     
-    // Модуль
-    const mod = 113;
-    // Основание, генератор группы
-    const base = 5;
     // Текст
     const m = Number(bigIntNumber) % mod;
     

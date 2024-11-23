@@ -28,7 +28,7 @@ app.post('/generateSignature', upload.none(), (req, res) => {
     const openKey = formData.openKey;
     const privateKey = formData.privateKey;
     const hash = formData.hash;
-    const result = generateSignature(openKey, privateKey, hash);
+    const result = generateSignature(openKey.openKey, openKey.base, openKey.mod, privateKey, hash);
     res.json({ res: result });
 });
 
