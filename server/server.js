@@ -25,7 +25,7 @@ app.post('/generateSignature', upload.none(), (req, res) => {
     // Доступ к данным формы
     const formData = req.body;
     console.log(formData);
-    const openKey = formData.openKey;
+    const openKey = JSON.parse(formData.openKey);
     const privateKey = formData.privateKey;
     const hash = formData.hash;
     const result = generateSignature(openKey.openKey, openKey.base, openKey.mod, privateKey, hash);
@@ -36,10 +36,10 @@ app.post('/checkSignature', upload.none(), (req, res) => {
     // Доступ к данным формы
     const formData = req.body;
     console.log(formData);
-    const openKey = formData.openKey;
+    const openKey = JSON.parse(formData.openKey);
     const signature = formData.signature.split(" ");
     const hash = formData.hash;
-    const result = checkSignature(openKey, signature[0], signature[1], hash);
+    const result = checkSignature(openKey.openKey, openKey.base, openKey.mod, signature[0], signature[1], hash);
     res.json({ res: result });
 })
 

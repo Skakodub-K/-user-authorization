@@ -9,7 +9,7 @@ export default function CheckForm() {
   // Подпись
   const [signature, setSignature] = useState("");
   // Открытый ключ
-  const [openKey, setOpenKey] = useState("");
+  const [openKey, setOpenKey] = useState(null);
   // Проверка успешна или нет
   const [isCheck, setIsCheck] = useState(null);
 
@@ -18,7 +18,7 @@ export default function CheckForm() {
       setFileWarning(true);
       return;
     }
-    // Reset any previous warnings
+    // Обнуляем предыдущие предупреждения
     setFileWarning(false);
     try {
       const hash = await hashFile(file);
@@ -27,7 +27,7 @@ export default function CheckForm() {
       // Отправляем хеш и ключи на сервер с использованием fetch API
       const formData = new FormData();
       formData.append("hash", hash);
-      formData.append("openKey", openKey);
+      formData.append("openKey", JSON.stringify(openKey));
       formData.append("signature", signature);
 
       const response = await fetch("http://localhost:5000/checkSignature", {
@@ -77,8 +77,15 @@ export default function CheckForm() {
         <center>Открытый ключ</center>
         <textarea
           className="textarea"
-          value={openKey}
-          onChange={(event) => setOpenKey(event.target.value)}
+          onChange={(event) => {
+            const words = event.target.value.split('\n');
+            console.log(words[0], words[1], words[2]);
+            setOpenKey({
+              openKey: words[0],
+              base: words[1],
+              mod: words[2]
+            })
+          }}
         ></textarea>
       </div>
       <div id="pad" className="sign-pad">

@@ -2,15 +2,15 @@
 const {modularExponentiation} = require('./calculations.js'); 
 
 // Проверка подписи
-function checkSignature(openKey, r, s, hash) {
+function checkSignature(openKey, g, mod, r, s, hash) {
     r = Number(r);
     s = Number(s);
     // Преобразуем строку в число (BigInt)
     const bigIntNumber = BigInt("0x" + hash);   
     // Модуль
-    const mod = 113;
+    mod = Number(mod);
     // Основание, генератор группы
-    const g = 5;
+    g = Number(g);
 
     const y = openKey % mod;
     const m =  Number(bigIntNumber) % mod;

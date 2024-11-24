@@ -8,7 +8,7 @@ export default function CreateForm() {
   // Закрытый ключ
   const [privateKey, setPrivateKey] = useState("");
   // Открытый ключ
-  const [openKey, setOpenKey] = useState("");
+  const [openKey, setOpenKey] = useState(null);
   // Подпись
   const [signature, setSignature] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,7 +26,7 @@ export default function CreateForm() {
       // Отправляем хеш и ключи на сервер с использованием fetch API
       const formData = new FormData();
       formData.append("hash", hash);
-      formData.append("openKey", openKey);
+      formData.append("openKey", JSON.stringify(openKey));
       formData.append("privateKey", privateKey);
       formData.append("test", "test");
 
@@ -57,9 +57,7 @@ export default function CreateForm() {
     const keys = JSON.parse(dataJSON);
 
     setPrivateKey(keys.privateKey);
-    setOpenKey(
-      `openKey: ${keys.openKey.openKey}\nbase: ${keys.openKey.base}\nmod: ${keys.openKey.mod}`
-      );
+    setOpenKey(keys.openKey);
   };
 
   useEffect(() => {
@@ -159,7 +157,7 @@ export default function CreateForm() {
           <center>Открытый ключ</center>
           <textarea
             className="textarea"
-            value={openKey}
+            value={openKey ? `${openKey.openKey}\n${openKey.base}\n${openKey.mod}` : ''}
             onChange={(event) => setOpenKey(event.target.value)}
           ></textarea>
         </div>
