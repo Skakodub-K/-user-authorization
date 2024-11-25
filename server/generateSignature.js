@@ -1,5 +1,9 @@
 // Импортируем функции
-const {modularExponentiation, gcd, extendedGCD} = require('./calculations.js'); 
+const {
+    modularExponentiation,
+    gcd,
+    extendedGCD
+} = require('./calculations.js'); 
 
 function generateSignature(openKey, base, mod, privateKey, hash) {
     // Преобразуем строку в число (BigInt)

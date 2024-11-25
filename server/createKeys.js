@@ -1,8 +1,11 @@
-const {modularExponentiation} = require('./calculations.js'); 
 const {
+    modularExponentiation,
     isPrimitiveRoot,
-    sieveOfEratosthenes
+    sieveOfEratosthenesW2
 } = require('./calculations.js');
+
+const low_limit = 225000;
+const high_limit = 425000;
 
 function handler(req, res) {
     // Создаём ключи
@@ -14,14 +17,14 @@ function handler(req, res) {
 
 function createKeys() {
     // Ищем случайное простое число для модуля
-    const randomN = Math.floor(10000 + (30000 - 10000) * Math.random());
+    const randomN = Math.floor(low_limit + (high_limit - low_limit) * Math.random());
     // Получаем решето
-    const sieve = sieveOfEratosthenes(randomN);
+    const sieve = sieveOfEratosthenesW2(randomN);
     // Модуль
     let mod = 0;
     for (let i = sieve.length-1; i > 0; i--) {
         if (sieve[i]) {
-            mod = i;
+            mod = i * 2 + 3;
             break;
         }
     }

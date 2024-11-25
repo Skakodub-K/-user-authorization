@@ -58,8 +58,9 @@ function extendedGCD(a, b) {
 function sieveOfEratosthenes(n) {
     // заполняем решето единицами
     const sieve = Array(n).fill(true);
-    // 1 - не простое число
+    // 0 и 1 - не простые числа
     sieve[0] = false;
+    sieve[1] = false;
 
     /*
     Можно зачеркивать, начиная сразу с числа p2, потому что все меньшие числа,
@@ -70,7 +71,7 @@ function sieveOfEratosthenes(n) {
     */
      
     // Вычеркнем кратные 2
-    for (l = 4; l <= n; l += 2) {
+    for (let l = 4; l <= n; l += 2) {
         sieve[l] = false;
     }
     /*
@@ -78,11 +79,39 @@ function sieveOfEratosthenes(n) {
     и поэтому для них можно считать шагами по 2p, начиная с p2.
     */
 
-    for (p = 3; p * p <= n; p++) {
+    for (let p = 3; p * p <= n; p++) {
         // если k - простое (не вычеркнуто)
         if (sieve[p]) {
             // то вычеркнем кратные k
-            for (l = p * p; l <= n; l += p) {
+            for (let l = p * p; l <= n; l += 2*p) {
+                sieve[l] = false;
+            }
+        }
+    }
+    return sieve;
+}
+
+// Решето Эратосфена без четных чисел
+function sieveOfEratosthenesW2(n) {
+    // заполняем решето единицами
+    const sieve = Array(Math.floor(n/2)).fill(true);
+
+    /*
+    Можно зачеркивать, начиная сразу с числа p2, потому что все меньшие числа,
+    кратные p, обязательно имеют простой делитель меньше p,
+    и они уже будут зачеркнуты к этому времени. 
+    И, соответственно, останавливать алгоритм можно,
+    когда p2 станет больше, чем n.
+    */
+
+    for (let p = 0; ; p++) {
+        let z = 3 + 2 * p;
+        if (z * z >= sieve.length) 
+            break;
+        // если k - простое (не вычеркнуто)
+        if (sieve[p]) {
+            // то вычеркнем кратные k
+            for (let l = p + (p + 1) * z; l < sieve.length; l += z) {
                 sieve[l] = false;
             }
         }
@@ -128,5 +157,6 @@ module.exports = {
     gcd,
     extendedGCD,
     sieveOfEratosthenes,
+    sieveOfEratosthenesW2,
     isPrimitiveRoot
 };
