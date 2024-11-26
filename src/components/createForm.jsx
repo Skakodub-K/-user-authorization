@@ -8,7 +8,7 @@ export default function CreateForm() {
   // Закрытый ключ
   const [privateKey, setPrivateKey] = useState("");
   // Открытый ключ
-  const [openKey, setOpenKey] = useState("");
+  const [openKey, setOpenKey] = useState(null);
   // Подпись
   const [signature, setSignature] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,11 +26,9 @@ export default function CreateForm() {
       // Отправляем хеш и ключи на сервер с использованием fetch API
       const formData = new FormData();
       formData.append("hash", hash);
-      formData.append("openKey", openKey);
+      formData.append("openKey", JSON.stringify(openKey));
       formData.append("privateKey", privateKey);
       formData.append("test", "test");
-      const keys = formData.keys();
-      const keyss = formData.getAll("test");
 
       const response = await fetch("http://localhost:5000/generateSignature", {
         method: "POST",
@@ -159,7 +157,7 @@ export default function CreateForm() {
           <center>Открытый ключ</center>
           <textarea
             className="textarea"
-            value={openKey}
+            value={openKey ? `${openKey.openKey}\n${openKey.base}\n${openKey.mod}` : ''}
             onChange={(event) => setOpenKey(event.target.value)}
           ></textarea>
         </div>
