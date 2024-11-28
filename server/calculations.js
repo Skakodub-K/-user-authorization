@@ -116,20 +116,32 @@ function sieveOfEratosthenesW2(n) {
             }
         }
     }
+    /* 
+        Имея массив, само число по индексу массива считается так:
+            number = index * 2 + 3;
+    */
     return sieve;
+}
+
+function isPrimitive(n) {
+    for (let i = 2; i <= Math.sqrt(n); ++i) {
+        if (n % i === 0)
+            return false; 
+    }
+    return true;
 }
 
 function eulerPhi(n) {
     return n-1;
 }
 
-// Функция для проверки, является ли число g первообразным корнем по модулю m
-function isPrimitiveRoot(g, m) {
+// Ищем простые делители m
+function findSimpleDivisors(m) {
     // Находим функцию эйлера от m
     let phiM = eulerPhi(m);
     // Простые делители phiM
     const primeFactors = [];
-
+ 
     // Находим простые делители phiM
     for (let factor = 2; factor * factor <= phiM; ++factor) {
         if (phiM % factor === 0) {
@@ -138,25 +150,42 @@ function isPrimitiveRoot(g, m) {
                 phiM /= factor;
             }
         }
-    }
-    if (phiM > 1)
+     }
+     if (phiM > 1)
         primeFactors.push(phiM);
+    return {primeFactors, phiM};
+}
 
+// Функция для проверки, является ли число g первообразным корнем по модулю m
+function isPrimitiveRoot(g, primeFactorsAndPhiM, module) {
+    const primeFactors = primeFactorsAndPhiM.primeFactors;
+    const phiM = primeFactorsAndPhiM.phiM;
     // Проверяем, что g^(phiM/q) != 1 (mod m) для всех простых делителей q
     for (const q of primeFactors) {
-        if (modularExponentiation(g, phiM / q, m) === 1)
+        if (modularExponentiation(g, phiM / q, module) === 1)
             return false;
     }
 
     // Проверяем, что g^phiM == 1 (mod m)
-    return modularExponentiation(g, phiM, m) === 1;
+    return modularExponentiation(g, phiM, module) === 1;
 }
 
+// Найти ближайший меньший примитвный корень числа g
+function findTheNearestLessPrimitiveRoot(g, module) {
+    // Мы уверены, что module - это простое число
+    // Поэтому функция эйлера от module - это module - 1
+    const simpleDivisors = findSimpleDivisors(module);
+    while(!isPrimitiveRoot(g, simpleDivisors, module) || g === 0)
+        --g;
+    return g;
+}
 module.exports = {
     modularExponentiation,
     gcd,
     extendedGCD,
     sieveOfEratosthenes,
     sieveOfEratosthenesW2,
-    isPrimitiveRoot
+    isPrimitive,
+    isPrimitiveRoot,
+    findTheNearestLessPrimitiveRoot
 };

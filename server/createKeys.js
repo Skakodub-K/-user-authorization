@@ -1,11 +1,13 @@
 const {
     modularExponentiation,
     isPrimitiveRoot,
-    sieveOfEratosthenesW2
+    sieveOfEratosthenesW2,
+    findTheNearestLessPrimitiveRoot,
+    isPrimitive
 } = require('./calculations.js');
 
-const low_limit = 225000;
-const high_limit = 425000;
+const low_limit = 225000000;
+const high_limit = 425000000;
 
 function handler(req, res) {
     // Создаём ключи
@@ -17,21 +19,14 @@ function handler(req, res) {
 
 function createKeys() {
     // Ищем случайное простое число для модуля
-    const randomN = Math.floor(low_limit + (high_limit - low_limit) * Math.random());
-    // Получаем решето
-    const sieve = sieveOfEratosthenesW2(randomN);
-    // Модуль
-    let mod = 0;
-    for (let i = sieve.length-1; i > 0; i--) {
-        if (sieve[i]) {
-            mod = i * 2 + 3;
-            break;
-        }
-    }
+    let randomN = Math.floor(low_limit + (high_limit - low_limit) * Math.random());
+    
+    while(!isPrimitive(randomN))
+        --randomN;
+    const mod = randomN;
+    
     // Основание, генератор группы, первообразный корень
-    let base =  Math.floor(mod/2 - 1 + mod/2 * Math.random());
-    while(!isPrimitiveRoot(base, mod))
-        base = (base + 1) % mod;
+    let base = Math.floor(mod/2 - 1 + mod/2 * Math.random());//findTheNearestLessPrimitiveRoot(Math.floor(mod/2 - 1 + mod/2 * Math.random()), mod);
     // Закрытый ключ
     const privateKey = Math.floor(Math.random() * mod);
     // Открытй ключ
@@ -39,7 +34,7 @@ function createKeys() {
 
     return { 
         privateKey,
-        openKey: {openKey,base, mod} 
+        openKey: {openKey, base, mod} 
     };
 }
 
