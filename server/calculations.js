@@ -1,162 +1,166 @@
-// Алгоритм быстрого возведение в степень
-// Метод повторяющихся возведения в квадрат и умножения
+// Алгоритм быстрого возведения в степень с большими числами
 function modularExponentiation(base, exponent, mod) {
-    // Любая база взятая по модулю 1 равна 0
-    if (mod === 1)
-        return 0;
-    // Начальное значение
-    let result = 1;
-    // Уменьшаем базу по модулю
-    base = base % mod;
-    while (exponent > 0) {
-        // Если степень нечётная, умножаем результат на базу
-        if (exponent % 2 === 1)
-            result = (result * base) % mod;
-        // Умножаем базу сама на себя
-        base = (base * base) % mod;
-        // Уменьшаем степень вдвое
-        exponent = Math.floor(exponent / 2);
-    }
-    return result;
+  // Любая база взятая по модулю 1 равна 0
+  if (mod === BigInt(1)) return BigInt(0);
+
+  // Начальное значение
+  let result = BigInt(1);
+
+  // Уменьшаем базу по модулю
+  base = base % mod;
+
+  while (exponent > BigInt(0)) {
+    // Если степень нечётная, умножаем результат на базу
+    if (exponent % BigInt(2) === BigInt(1)) result = (result * base) % mod;
+
+    // Умножаем базу сама на себя
+    base = (base * base) % mod;
+
+    // Уменьшаем степень вдвое
+    exponent = exponent / BigInt(2);
+  }
+
+  return result;
 }
 
-// Алгоритм Евклида
+// Алгоритм Евклида для больших чисел
 function gcd(a, b) {
-    while (b !== 0) {
-        let temp = b;
-        b = a % b;
-        a = temp;
-    }
-    return a;
+  while (b !== BigInt(0)) {
+    let temp = b;
+    b = a % b;
+    a = temp;
+  }
+  return a;
 }
 
-// Расширенный Алгоритм Евклида
+// Расширенный алгоритм Евклида для больших чисел
 function extendedGCD(a, b) {
-    let s = 0, old_s = 1;
-    let t = 1, old_t = 0;
-    let r = b, old_r = a;
+  let s = BigInt(0),
+    old_s = BigInt(1);
+  let t = BigInt(1),
+    old_t = BigInt(0);
+  let r = b,
+    old_r = a;
 
-    while (r !== 0) {
-        const quotient = Math.floor(old_r / r);
-        let temp = r;
-        r = old_r - quotient * r;
-        old_r = temp;
-        
-        temp = s;
-        s = old_s - quotient * s;
-        old_s = temp;
-        
-        temp = t;
-        t = old_t - quotient * t;
-        old_t = temp;
-    }
+  while (r !== BigInt(0)) {
+    const quotient = old_r / r;
+    let temp = r;
+    r = old_r - quotient * r;
+    old_r = temp;
 
-    return { gcd: old_r, x: old_s, y: old_t };
+    temp = s;
+    s = old_s - quotient * s;
+    old_s = temp;
+
+    temp = t;
+    t = old_t - quotient * t;
+    old_t = temp;
+  }
+
+  return { gcd: old_r, x: old_s, y: old_t };
 }
 
-// Решето Эратосфена
+// Решето Эратосфена для больших чисел
 function sieveOfEratosthenes(n) {
-    // заполняем решето единицами
-    const sieve = Array(n).fill(true);
-    // 0 и 1 - не простые числа
-    sieve[0] = false;
-    sieve[1] = false;
+  // заполняем решето единицами
+  const sieve = Array(n).fill(true);
+  // 0 и 1 - не простые числа
+  sieve[0] = false;
+  sieve[1] = false;
 
-    /*
-    Можно зачеркивать, начиная сразу с числа p2, потому что все меньшие числа,
-    кратные p, обязательно имеют простой делитель меньше p,
-    и они уже будут зачеркнуты к этому времени. 
-    И, соответственно, останавливать алгоритм можно,
-    когда p2 станет больше, чем n.
-    */
-     
-    // Вычеркнем кратные 2
-    for (let l = 4; l <= n; l += 2) {
+  for (let l = 4; l <= n; l += 2) {
+    sieve[l] = false;
+  }
+
+  for (let p = 3; p * p <= n; p++) {
+    if (sieve[p]) {
+      for (let l = p * p; l <= n; l += 2 * p) {
         sieve[l] = false;
+      }
     }
-    /*
-    Кроме того, все простые числа, кроме 2, — нечётные числа,
-    и поэтому для них можно считать шагами по 2p, начиная с p2.
-    */
-
-    for (let p = 3; p * p <= n; p++) {
-        // если k - простое (не вычеркнуто)
-        if (sieve[p]) {
-            // то вычеркнем кратные k
-            for (let l = p * p; l <= n; l += 2*p) {
-                sieve[l] = false;
-            }
-        }
-    }
-    return sieve;
+  }
+  return sieve;
 }
 
-// Решето Эратосфена без четных чисел
+// Решето Эратосфена без четных чисел для больших чисел
 function sieveOfEratosthenesW2(n) {
-    // заполняем решето единицами
-    const sieve = Array(Math.floor(n/2)).fill(true);
+  const sieve = Array(Math.floor(n / 2)).fill(true);
 
-    /*
-    Можно зачеркивать, начиная сразу с числа p2, потому что все меньшие числа,
-    кратные p, обязательно имеют простой делитель меньше p,
-    и они уже будут зачеркнуты к этому времени. 
-    И, соответственно, останавливать алгоритм можно,
-    когда p2 станет больше, чем n.
-    */
-
-    for (let p = 0; ; p++) {
-        let z = 3 + 2 * p;
-        if (z * z >= sieve.length) 
-            break;
-        // если k - простое (не вычеркнуто)
-        if (sieve[p]) {
-            // то вычеркнем кратные k
-            for (let l = p + (p + 1) * z; l < sieve.length; l += z) {
-                sieve[l] = false;
-            }
-        }
+  for (let p = 0; ; p++) {
+    let z = 3 + 2 * p;
+    if (z * z >= sieve.length) break;
+    if (sieve[p]) {
+      for (let l = p + (p + 1) * z; l < sieve.length; l += z) {
+        sieve[l] = false;
+      }
     }
-    return sieve;
+  }
+  return sieve;
 }
 
+function isPrimitive(n) {
+  n = BigInt(n); // Now we can safely convert n to BigInt
+
+  // Check for prime using BigInt
+  if (n < BigInt(2)) {
+    return false; // 0 and 1 are not prime numbers
+  }
+
+  for (let i = 2; i <= Math.sqrt(Number(n)); ++i) {
+    if (Number(n) % i === 0) {
+      return false; // Found a divisor, not prime
+    }
+  }
+  return true; // No divisors found, n is prime
+}
 function eulerPhi(n) {
-    return n-1;
+  return n - BigInt(1);
 }
 
-// Функция для проверки, является ли число g первообразным корнем по модулю m
-function isPrimitiveRoot(g, m) {
-    // Находим функцию эйлера от m
-    let phiM = eulerPhi(m);
-    // Простые делители phiM
-    const primeFactors = [];
+// Ищем простые делители m
+function findSimpleDivisors(m) {
+  let phiM = eulerPhi(m);
+  const primeFactors = [];
 
-    // Находим простые делители phiM
-    for (let factor = 2; factor * factor <= phiM; ++factor) {
-        if (phiM % factor === 0) {
-            primeFactors.push(factor);
-            while (phiM % factor === 0) {
-                phiM /= factor;
-            }
-        }
+  for (let factor = BigInt(2); factor * factor <= phiM; ++factor) {
+    if (phiM % factor === BigInt(0)) {
+      primeFactors.push(factor);
+      while (phiM % factor === BigInt(0)) {
+        phiM /= factor;
+      }
     }
-    if (phiM > 1)
-        primeFactors.push(phiM);
+  }
+  if (phiM > BigInt(1)) primeFactors.push(phiM);
+  return { primeFactors, phiM };
+}
 
-    // Проверяем, что g^(phiM/q) != 1 (mod m) для всех простых делителей q
-    for (const q of primeFactors) {
-        if (modularExponentiation(g, phiM / q, m) === 1)
-            return false;
-    }
+// Проверка, является ли число g первообразным корнем по модулю m
+function isPrimitiveRoot(g, primeFactorsAndPhiM, module) {
+  const primeFactors = primeFactorsAndPhiM.primeFactors;
+  const phiM = primeFactorsAndPhiM.phiM;
 
-    // Проверяем, что g^phiM == 1 (mod m)
-    return modularExponentiation(g, phiM, m) === 1;
+  for (const q of primeFactors) {
+    if (modularExponentiation(g, phiM / q, module) === BigInt(1)) return false;
+  }
+
+  return modularExponentiation(g, phiM, module) === BigInt(1);
+}
+
+// Найти ближайший меньший примитвный корень числа g
+function findTheNearestLessPrimitiveRoot(g, module) {
+  const simpleDivisors = findSimpleDivisors(module);
+  while (!isPrimitiveRoot(g, simpleDivisors, module) || g === BigInt(0))
+    g = g - BigInt(1);
+  return g;
 }
 
 module.exports = {
-    modularExponentiation,
-    gcd,
-    extendedGCD,
-    sieveOfEratosthenes,
-    sieveOfEratosthenesW2,
-    isPrimitiveRoot
+  modularExponentiation,
+  gcd,
+  extendedGCD,
+  sieveOfEratosthenes,
+  sieveOfEratosthenesW2,
+  isPrimitive,
+  isPrimitiveRoot,
+  findTheNearestLessPrimitiveRoot,
 };

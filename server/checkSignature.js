@@ -1,23 +1,31 @@
 // Импортируем функции
-const {modularExponentiation} = require('./calculations.js'); 
+const { modularExponentiation } = require("./calculations.js");
 
 // Проверка подписи
 function checkSignature(openKey, g, mod, r, s, hash) {
-    r = Number(r);
-    s = Number(s);
-    // Преобразуем строку в число (BigInt)
-    const bigIntNumber = BigInt("0x" + hash);   
-    // Модуль
-    mod = Number(mod);
-    // Основание, генератор группы
-    g = Number(g);
+  // Преобразуем все входные параметры в BigInt
+  const bigIntOpenKey = BigInt(openKey);
+  const bigIntG = BigInt(g);
+  const bigIntMod = BigInt(mod);
+  const bigIntR = BigInt(r);
+  const bigIntS = BigInt(s);
 
-    const y = openKey % mod;
-    const m =  Number(bigIntNumber) % mod;
-    
-    const leftSide = (modularExponentiation(y, r, mod) * modularExponentiation(r, s, mod)) % mod;
-    const rightSide = modularExponentiation(g, m, mod);
-    return leftSide === rightSide;
+  // Преобразуем строку хэш в BigInt
+  const bigIntHash = BigInt("0x" + hash);
+
+  // Вычисляем y и m как BigInt
+  const y = bigIntOpenKey % bigIntMod;
+  const m = bigIntHash % bigIntMod;
+
+  // Вычисляем левую и правую части
+  const leftSide =
+    (modularExponentiation(y, bigIntR, bigIntMod) *
+      modularExponentiation(bigIntR, bigIntS, bigIntMod)) %
+    bigIntMod; //3066706820547*1036588989910
+  const rightSide = modularExponentiation(bigIntG, m, bigIntMod);
+
+  // Сравниваем BigInt значения
+  return leftSide === rightSide;
 }
 
 module.exports = checkSignature;
