@@ -106,13 +106,17 @@ function isPrimitive(n) {
     return false; // 0 and 1 are not prime numbers
   }
 
-  for (let i = 2; i <= Math.sqrt(Number(n)); ++i) {
+  if (Number(n) % 2 === 0)
+    return false; // Found a divisor, not prime
+
+  for (let i = 3; i <= Math.sqrt(Number(n)); i+=2) {
     if (Number(n) % i === 0) {
       return false; // Found a divisor, not prime
     }
   }
   return true; // No divisors found, n is prime
 }
+
 function eulerPhi(n) {
   return n - BigInt(1);
 }
@@ -154,6 +158,129 @@ function findTheNearestLessPrimitiveRoot(g, module) {
   return g;
 }
 
+function random_unimodular_matrix(n, operationCount, maxMultiplier) {
+  // Начнем с единичной матрицы
+  let A = Array.from({ length: n }, () => Array(n).fill(0));
+  for (let i = 0; i < n; ++i) {
+    A[i][i] = 1;
+  }
+
+  for (let _ = 0; _ < Math.floor(operationCount); ++_) {
+    // Случайно выберем тип преобразования
+    // TODO:
+    const transformType = ['swap', 'negate', 'add'][Math.floor(Math.random() * 3)];
+
+    // Случайно выберем индексы строк или столбцов
+    let i = Math.floor(Math.random() * n);
+    let j = Math.floor(Math.random() * n);
+    while(i == j)
+      j = Math.floor(Math.random() * n);
+
+    /// TODO
+    let k = Math.floor(Math.random() * n) * maxMultiplier;
+
+    if (transformType === 'swap') {
+      // Меняем местами строки или столбцы
+      if (Math.random() < 0.5) {
+        [A[i], A[j]] = [A[j], A[i]];
+      } else {
+        for (let l = 0; l < n; ++l) {
+          [A[l][i], A[l][j]] = [A[l][j], A[l][i]];
+        }
+      }
+    } else if (transformType === 'negate') {
+      // Умножаем строку или столбец на -1
+      if (Math.random() < 0.5) {
+        for (let l = 0; l < n; ++l) {
+          A[i][l] *= -1;
+        }
+      } else {
+        for (let l = 0; l < n; ++l) {
+          A[l][i] *= -1;
+        }
+      }
+    } else if (transformType === 'add') {
+      // Добавляем одну строку (или столбец) к другой, умноженную на k
+      if (Math.random() < 0.5) {
+        for (let l = 0; l < n; ++l) {
+          A[i][l] += k * A[j][l];
+        }
+      } else {
+        for (let l = 0; l < n; ++l) {
+          A[l][i] += k * A[l][j];
+        }
+      }
+    }
+  }
+  return A;
+}
+
+// Функция для нахождения определителя матрицы
+function determinant(matrix) {
+  // Проверка, является ли матрица квадратной
+  if (!isSquareMatrix(matrix)) {
+    throw new Error("Матрица должна быть квадратной.");
+  }
+
+  // Если матрица 1x1, то её определитель равен единственному элементу
+  if (matrix.length == 1)
+    return matrix[0][0];
+
+  // Если матрица 2x2, то используем формулу для вычисления определителя
+  if (matrix.length == 2)
+    return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+
+  // Для матриц большего размера используем метод разложения по первой строке
+  let det = 0;
+  for (let i = 0; i < matrix.length; i++) {
+    // Создаем подматрицу, исключая первую строку и i-й столбец
+    let subMatrix = getSubMatrix(matrix, 0, i);
+
+    // Вычисляем определитель подматрицы рекурсивно
+    let minorDet = determinant(subMatrix);
+
+    // Добавляем вклад текущего элемента в общий определитель
+    det += ((i % 2 == 0 ? 1 : -1) * matrix[0][i] * minorDet);
+  }
+
+  return det;
+}
+
+// Вспомогательная функция для проверки, является ли матрица квадратной
+function isSquareMatrix(matrix) {
+  if (matrix.length === 0) {
+    return false;
+  }
+
+  for (let row of matrix) {
+    if (row.length !== matrix.length) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// Вспомогательная функция для создания подматрицы
+function getSubMatrix(matrix, excludeRow, excludeCol) {
+  let subMatrix = [];
+
+  for (let i = 0; i < matrix.length; i++) {
+    if (i != excludeRow) {
+      let row = [];
+
+      for (let j = 0; j < matrix[i].length; j++) {
+        if (j != excludeCol)
+          row.push(matrix[i][j]);
+      }
+
+      subMatrix.push(row);
+    }
+  }
+
+  return subMatrix;
+}
+
 module.exports = {
   modularExponentiation,
   gcd,
@@ -163,4 +290,6 @@ module.exports = {
   isPrimitive,
   isPrimitiveRoot,
   findTheNearestLessPrimitiveRoot,
+  random_unimodular_matrix,
+  determinant
 };
