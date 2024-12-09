@@ -146,18 +146,23 @@ export default function CreateForm() {
             onChange={(event) => setPrivateKey(event.target.value)}
           ></textarea>
         </div>
-          {signature ? (
-            <div className="result-view">
-              <img className="create-icon" src="./iconCrt.png" alt="icon"></img>
-              <span className="signature">{signature}</span>
-            </div>
-          ):(<></>)
-          }
+        {signature ? (
+          <div className="result-view">
+            <img className="create-icon" src="./iconCrt.png" alt="icon"></img>
+            <span className="signature">{signature}</span>
+          </div>
+        ) : (
+          <></>
+        )}
         <div id="pad">
           <center>Открытый ключ</center>
           <textarea
             className="textarea"
-            value={openKey ? `${openKey.openKey}\n${openKey.base}\n${openKey.mod}` : ''}
+            value={
+              openKey
+                ? `${openKey.openKey}\n${openKey.base}\n${openKey.mod}`
+                : ""
+            }
             onChange={(event) => setOpenKey(event.target.value)}
           ></textarea>
         </div>

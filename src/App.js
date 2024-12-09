@@ -1,39 +1,35 @@
 import "./App.css";
 import { useState } from "react";
-import WindowForm from "./components/window";
+import FirstTask from "./components/FirstTask";
+import SecondTask from "./components/SecondTask";
 function App() {
-  const [openCreate, setOpenCreate] = useState(false);
-  const [openCheck, setOpenCheck] = useState(false);
-
+  const [fsOpen, setFsOpen] = useState("0");
   return (
     <div className="App">
-      <h1 className="app-header">Приложение для создания и проверки ЭЦП</h1>
-      <div className="button-container">
-        {!openCreate ? (
+      {fsOpen === "0" ? (
+        <>
           <div
             className="count-particles"
             onClick={() => {
-              setOpenCreate(true);
+              setFsOpen("1");
             }}
           >
-            Создать
+            First
           </div>
-        ) : (
-          <WindowForm mode={true} exit={setOpenCreate} />
-        )}
-        {!openCheck ? (
           <div
             className="count-particles"
             onClick={() => {
-              setOpenCheck(true);
+              setFsOpen("2");
             }}
           >
-            Проверить
+            Second
           </div>
-        ) : (
-          <WindowForm mode={false} exit={setOpenCheck} />
-        )}
-      </div>
+        </>
+      ) : fsOpen === "1" ? (
+        <FirstTask />
+      ) : (
+        <SecondTask />
+      )}
     </div>
   );
 }
