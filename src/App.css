@@ -205,8 +205,8 @@ html {
   border-radius: 20px;
   position: relative;
   top: 15vh;
-  left:160px;
-  
+  left: 160px;
+
   margin: 0 40%;
 }
 @keyframes iconAnim {
@@ -255,4 +255,46 @@ html {
 .ok-button:hover {
   cursor: pointer;
   background-color: red;
+}
+.ls-buttton {
+  border: 0px;
+  width: 160px;
+  height: 90px;
+}
+.ls-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  gap: 30px;
+}
+input {
+  box-shadow: 2px 3px 30px #000;
+  resize: none;
+  width: 25vw;
+  max-width: 400px;
+  height: 65px;
+  font-size: 20px;
+  font-weight: bolder;
+  padding: 10px;
+  font-family: system-ui;
+  border: none;
+  color: #fff;
+  border-radius: 10px;
+  background: transparent;
+}
+input::placeholder {
+  color: white;
+  opacity: 0.5;
+}
+.ls-header {
+  position: relative;
+  bottom: 40px;
+  color: white;
+}
+.not-name {
+  box-shadow: 2px 3px 30px red;
+}
+.not-pswd {
+  box-shadow: 2px 3px 30px red;
 }
