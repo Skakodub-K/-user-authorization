@@ -67,10 +67,10 @@ export default function LSForms(props) {
         document.getElementById("usname_s").value = "";
         document.getElementById("pswd_s").value = "";
       } else {
+        setIsResp(true);
         console.error("Ошибка регистрации!");
       }
     } else {
-      setIsResp(true);
       getIsValues(username, password);
     }
   }
