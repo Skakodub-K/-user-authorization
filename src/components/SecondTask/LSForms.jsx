@@ -1,7 +1,10 @@
 import { useState } from "react";
+import {createOpenKey} from "./clientCalc.js"
 
 export default function LSForms(props) {
+  // Что выбрал юзер: зарегистрироваться или залогиниться
   const { lsMode } = props;
+  
   const [notFoundName, setNotFoundName] = useState(false);
   const [notFoundPswd, setNotFoundPswd] = useState(false);
 
@@ -16,15 +19,34 @@ export default function LSForms(props) {
     }
   }
 
+  //Обработчик нажатия кнопки "Зарегистрироваться"
   async function signUP() {
-    const usname = document.getElementById("usname_s").value;
+    const username = document.getElementById("usname_s").value;
     const password = document.getElementById("pswd_s").value;
-    if (usname !== "" && password !== "") {
-      alert(`signUP -> name:${usname} | password: ${password}`);
+    if (username !== "" && password !== "") {
       setNotFoundName(false);
       setNotFoundPswd(false);
+
+      const openKey = createOpenKey(password);
+
+      // Отправляем открытый ключ и логин на сервер с использованием fetch API
+      const formData = new FormData();
+      formData.append("openKey", JSON.stringify(openKey));
+      formData.append("username", username);
+
+      const response = await fetch("http://localhost:5000/authRegistry", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        // Ответ 200 OK
+        window.alert("Успешная регистрация!");
+      } else {
+        console.error("Ошибка регистрации!");
+      }
     } else {
-      getIsValues(usname, password);
+      getIsValues(username, password);
     }
   }
 

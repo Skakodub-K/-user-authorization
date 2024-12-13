@@ -1,13 +1,13 @@
 import { useState } from "react";
-import WindowForm from "./window";
+import WindowForm from "../window";
 
-export default function SecondTask() {
+export default function FirstTask() {
   const [openCreate, setOpenCreate] = useState(false);
   const [openCheck, setOpenCheck] = useState(false);
 
   return (
     <>
-      <h1 className="app-header">Приложение для Аутентификации</h1>
+      <h1 className="app-header">Приложение для создания и проверки ЭЦП</h1>
       <div className="button-container">
         {!openCreate ? (
           <div
@@ -16,10 +16,10 @@ export default function SecondTask() {
               setOpenCreate(true);
             }}
           >
-            Sign up
+            Создать
           </div>
         ) : (
-          <WindowForm mode={3} exit={setOpenCreate} />
+          <WindowForm mode={1} exit={setOpenCreate} />
         )}
         {!openCheck ? (
           <div
@@ -28,10 +28,10 @@ export default function SecondTask() {
               setOpenCheck(true);
             }}
           >
-            Log in
+            Проверить
           </div>
         ) : (
-          <WindowForm mode={4} exit={setOpenCheck} />
+          <WindowForm mode={2} exit={setOpenCheck} />
         )}
       </div>
     </>

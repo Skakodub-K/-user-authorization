@@ -1,7 +1,7 @@
 import "./App.css";
 import { useState } from "react";
-import FirstTask from "./components/FirstTask";
-import SecondTask from "./components/SecondTask";
+import FirstTask from "./components/FirstTask/FirstTask";
+import SecondTask from "./components/SecondTask/SecondTask";
 function App() {
   const [fsOpen, setFsOpen] = useState("0");
   return (
