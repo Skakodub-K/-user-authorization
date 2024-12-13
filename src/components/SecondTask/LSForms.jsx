@@ -1,5 +1,8 @@
 import { useState } from "react";
-import {createOpenKey} from "./clientCalc.js"
+import {
+  createOpenKey,
+  encryptText
+} from "./clientCalc.js"
 
 export default function LSForms(props) {
   // Что выбрал юзер: зарегистрироваться или залогиниться
@@ -51,14 +54,32 @@ export default function LSForms(props) {
   }
 
   async function logIn() {
-    const usname = document.getElementById("usname_l").value;
+    const username = document.getElementById("usname_l").value;
     const password = document.getElementById("pswd_l").value;
-    if (usname !== "" && password !== "") {
-      alert(`logIn -> name:${usname} | password: ${password}`);
+    if (username !== "" && password !== "") {
       setNotFoundName(false);
       setNotFoundPswd(false);
+
+      const encryptedText = encryptText(username, password);
+
+      // Отправляем открытый ключ и логин на сервер с использованием fetch API
+      const formData = new FormData();
+      formData.append("encryptedText", JSON.stringify(encryptedText));
+      formData.append("username", username);
+
+      const response = await fetch("http://localhost:5000/authLogin", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        // Ответ 200 OK
+        window.alert("Успешный вход!");
+      } else {
+        console.error("Ошибка входа!");
+      }
     } else {
-      getIsValues(usname, password);
+      getIsValues(username, password);
     }
   }
 

@@ -5,11 +5,17 @@ function createOpenKey(password) {
     return multiplyMatrices(privateKey.B, privateKey.U);
 }
 
+//
 function createPrivateKey(password) {
     return {
         B: createNonSingularMatrix(2, password),
         U: [[1, 0], [0, 1]]
     };
+}
+
+// Шифруем текст
+function encryptText(text, password) {
+    return text;
 }
 
 // Считаем детермминант
@@ -98,5 +104,6 @@ function createNonSingularMatrix(n, seed) {
 }
 
 module.exports = {
-    createOpenKey
+    createOpenKey,
+    encryptText
 };

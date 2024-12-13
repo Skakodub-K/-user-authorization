@@ -81,7 +81,33 @@ app.post('/authRegistry', upload.none(), async (req, res) => {
     res.status(200).send();
 });
 
-// Добавьте другие маршруты по мере необходимости
+app.post('/authLogin', upload.none(), async (req, res) => {
+    // Доступ к данным формы
+    const formData = req.body;
+    console.log(formData);
+    
+    const encryptedText = formData.encryptedText;
+    const username = formData.username;
+
+    const fs = require('fs'); // Модуль для работы с файловой системой
+    let data = null;
+    try {
+        data = await fs.promises.readFile('./users.json', 'utf8');
+    } catch (err) {
+        console.error('Ошибка при обработке файла:', err);
+        return res.status(500).send();
+    }
+    // Парсинг содержимого файла в объект
+    const users = JSON.parse(data);
+    const user = users.find((user, index) => user.username === username);
+    if (!user) {
+        console.log("Такого пользователя нет!");
+        return res.status(400).send();
+    }
+              
+    console.log('Аутификация прошла успешно.');
+    res.status(200).send();
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
