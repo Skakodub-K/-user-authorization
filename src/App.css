@@ -298,3 +298,22 @@ input::placeholder {
 .not-pswd {
   box-shadow: 2px 3px 30px red;
 }
+.form_status{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap:50px;
+}
+.successfully{
+  margin-top: 135px;
+}
+.form_status-icon{
+  width:100px;
+  height: 100px;
+}
+.form_status-text{
+  font-family: system-ui;
+  padding: 10px;
+  font-size: 25px;
+  font-weight: bolder;
+}

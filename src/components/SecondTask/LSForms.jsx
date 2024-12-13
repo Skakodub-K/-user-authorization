@@ -1,16 +1,14 @@
 import { useState } from "react";
-import {
-  createOpenKey,
-  encryptText
-} from "./clientCalc.js"
+import { createOpenKey, encryptText } from "./clientCalc.js";
 
 export default function LSForms(props) {
   // Что выбрал юзер: зарегистрироваться или залогиниться
   const { lsMode } = props;
-  
+
   const [notFoundName, setNotFoundName] = useState(false);
   const [notFoundPswd, setNotFoundPswd] = useState(false);
-
+  const [isSuccessfully, setIsSuccessfully] = useState(false);
+  const [isResp, setIsResp] = useState(false);
   function getIsValues(name, password) {
     if (name === "") {
       setNotFoundName(true);
@@ -19,6 +17,27 @@ export default function LSForms(props) {
       }
     } else {
       setNotFoundPswd(true);
+    }
+  }
+  function getResultIcon(state) {
+    if (state) {
+      return (
+        <div className={`form_status ${isSuccessfully && "successfully"}`}>
+          <img className="form_status-icon" src="/done.png" alt="done"></img>
+          <p className="form_status-text" style={{ color: "#4cc949" }}>
+            {lsMode ? "Регистрация прошла успешно" : "Успешный вход"}
+          </p>
+        </div>
+      );
+    } else {
+      return (
+        <div className={`form_status ${isSuccessfully && "successfully"}`}>
+          <img className="form_status-icon" src="/errors.png" alt="err"></img>
+          <p className="form_status-text" style={{ color: "#ed5451" }}>
+            {lsMode ? "Ошибка регистрации" : "Ошибка входа"}
+          </p>
+        </div>
+      );
     }
   }
 
@@ -43,12 +62,15 @@ export default function LSForms(props) {
       });
 
       if (response.ok) {
-        // Ответ 200 OK
-        window.alert("Успешная регистрация!");
+        setIsResp(true);
+        setIsSuccessfully(true);
+        document.getElementById("usname_s").value = "";
+        document.getElementById("pswd_s").value = "";
       } else {
         console.error("Ошибка регистрации!");
       }
     } else {
+      setIsResp(true);
       getIsValues(username, password);
     }
   }
@@ -73,9 +95,12 @@ export default function LSForms(props) {
       });
 
       if (response.ok) {
-        // Ответ 200 OK
-        window.alert("Успешный вход!");
+        setIsResp(true);
+        setIsSuccessfully(true);
+        document.getElementById("usname_s").value = "";
+        document.getElementById("pswd_s").value = "";
       } else {
+        setIsResp(true);
         console.error("Ошибка входа!");
       }
     } else {
@@ -100,14 +125,18 @@ export default function LSForms(props) {
             className={notFoundName ? "not-pswd" : ""}
             placeholder={notFoundPswd ? "Введите пароль" : "password"}
           />
-
-          <button
-            className="count-particles ls-buttton"
-            onClick={lsMode ? signUP : logIn}
-          >
-            {lsMode ? "sign up" : "log in"}
-          </button>
+          {!isSuccessfully ? (
+            <button
+              className="count-particles ls-buttton"
+              onClick={lsMode ? signUP : logIn}
+            >
+              {lsMode ? "sign up" : "log in"}
+            </button>
+          ) : (
+            <></>
+          )}
         </div>
+        {isResp && getResultIcon(isSuccessfully)}
       </center>
     </>
   );
