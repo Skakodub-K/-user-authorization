@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createOpenKey, encryptText, decryptCiphr} from "./clientCalc.js";
+import { createOpenKey, encryptText, decryptCiphr } from "./clientCalc.js";
 
 export default function LSForms(props) {
   // Что выбрал юзер: зарегистрироваться или залогиниться
@@ -20,7 +20,7 @@ export default function LSForms(props) {
       setNotFoundPswd(true);
     }
   }
-  
+
   function getResultIcon(state) {
     if (state) {
       return (
@@ -87,7 +87,6 @@ export default function LSForms(props) {
 
       // Отправляем логин на сервер с использованием fetch API и ждем шифр-текст
       requestCipherForLogIn(username, password);
-      
     } else {
       getIsValues(username, password);
     }
@@ -114,7 +113,7 @@ export default function LSForms(props) {
   async function sendResponeForLogIn(username, password, ciphr) {
     // Расшифровываем шифр
     const message = decryptCiphr(JSON.parse(ciphr.ciphr), password);
-    
+
     const formData = new FormData();
     formData.append("username", username);
     formData.append("message", message);
@@ -135,13 +134,13 @@ export default function LSForms(props) {
     }
   }
 
-    return (
-      <>
-        <center>
-          <h1 className="ls-header">
-            {lsMode ? "Зарегистрируйтесь" : "Войдите"}
-          </h1>
-          <div className="ls-container">
+  return (
+    <>
+      <center>
+        <h1 className="ls-header">
+          {lsMode ? "Зарегистрируйтесь" : "Войдите"}
+        </h1>
+        <div className="ls-container">
           <input
             id={`usname_${lsMode ? "s" : "l"}`}
             className={notFoundName ? "not-name" : ""}

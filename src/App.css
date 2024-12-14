@@ -10,8 +10,23 @@ html {
   height: 100vh;
   background: linear-gradient(90deg, #f24645, #4f00bc);
 }
-.App {
-  padding: 0 80px;
+a {
+  text-decoration: none;
+}
+.App h1 {
+  font-size: 45px;
+  color: wheat;
+  position: relative;
+  z-index: 3;
+  top: 175px;
+}
+.main_container {
+  display: flex;
+  flex-direction: row;
+  gap: 100px;
+  height: 88vh;
+  justify-content: center;
+  align-items: center;
 }
 .count-particles {
   box-sizing: border-box;
@@ -209,6 +224,9 @@ html {
 
   margin: 0 40%;
 }
+.main_button {
+  width: 285px;
+}
 @keyframes iconAnim {
   0% {
     transform: rotate(0deg);
@@ -298,20 +316,20 @@ input::placeholder {
 .not-pswd {
   box-shadow: 2px 3px 30px red;
 }
-.form_status{
+.form_status {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap:50px;
+  gap: 50px;
 }
-.successfully{
+.successfully {
   margin-top: 135px;
 }
-.form_status-icon{
-  width:100px;
+.form_status-icon {
+  width: 100px;
   height: 100px;
 }
-.form_status-text{
+.form_status-text {
   font-family: system-ui;
   padding: 10px;
   font-size: 25px;
