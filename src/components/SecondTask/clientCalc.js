@@ -103,6 +103,16 @@ function createNonSingularMatrix(n, seed) {
     return matrix;
 }
 
+function encryptCiphr(ciphr, password) {
+    const privateKey = createPrivateKey(password);
+    //multiplyMatrices()
+    
+    //ciphr * B-1
+    //округляем rc
+    //получаем m = rc * U-1
+    //return m
+}
+
 module.exports = {
     createOpenKey,
     encryptText

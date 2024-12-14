@@ -9,6 +9,7 @@ export default function LSForms(props) {
   const [notFoundPswd, setNotFoundPswd] = useState(false);
   const [isSuccessfully, setIsSuccessfully] = useState(false);
   const [isResp, setIsResp] = useState(false);
+
   function getIsValues(name, password) {
     if (name === "") {
       setNotFoundName(true);
@@ -19,6 +20,7 @@ export default function LSForms(props) {
       setNotFoundPswd(true);
     }
   }
+  
   function getResultIcon(state) {
     if (state) {
       return (
@@ -41,7 +43,7 @@ export default function LSForms(props) {
     }
   }
 
-  //Обработчик нажатия кнопки "Зарегистрироваться"
+  // Обработчик нажатия кнопки "Зарегистрироваться"
   async function signUP() {
     const username = document.getElementById("usname_s").value;
     const password = document.getElementById("pswd_s").value;
@@ -75,46 +77,78 @@ export default function LSForms(props) {
     }
   }
 
-  async function logIn() {
+  // Обработчик нажатия кнопки "Войти"
+  async function handlerPresslogIn() {
     const username = document.getElementById("usname_l").value;
     const password = document.getElementById("pswd_l").value;
     if (username !== "" && password !== "") {
       setNotFoundName(false);
       setNotFoundPswd(false);
 
-      const encryptedText = encryptText(username, password);
-
-      // Отправляем открытый ключ и логин на сервер с использованием fetch API
-      const formData = new FormData();
-      formData.append("encryptedText", JSON.stringify(encryptedText));
-      formData.append("username", username);
-
-      const response = await fetch("http://localhost:5000/authLogin", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        setIsResp(true);
-        setIsSuccessfully(true);
-        document.getElementById("usname_s").value = "";
-        document.getElementById("pswd_s").value = "";
-      } else {
-        setIsResp(true);
-        console.error("Ошибка входа!");
-      }
+      // Отправляем логин на сервер с использованием fetch API и ждем шифр-текст
+      requestCipherForLogIn();
+      
     } else {
       getIsValues(username, password);
     }
   }
 
-  return (
-    <>
-      <center>
-        <h1 className="ls-header">
-          {lsMode ? "Зарегистрируйтесь" : "Войдите"}
-        </h1>
-        <div className="ls-container">
+  // Просим у сервера шифр-текст
+  async function requestCipherForLogIn() {
+    const formData = new FormData();
+    formData.append("username", username);
+    const response = await fetch("http://localhost:5000/authLoginRequest", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      await sendResponeForLogIn(response.body.ciphr)
+    } else {
+      setIsResp(true);
+      console.error("Ошибка входа!");
+    }
+  }
+
+  async function sendResponeForLogIn(ciphr) {
+    // Расшифровываем шифр
+    const NotCiphr = "";
+    
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("NotCiphr", NotCiphr);
+
+    const response = await fetch("http://localhost:5000/authLoginRequest", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      await sendResponeForLogIn(response.body.ciphr)
+    } else {
+      setIsResp(true);
+      console.error("Ошибка входа!");
+    }
+
+
+    if (response.ok) {
+      setIsResp(true);
+      setIsSuccessfully(true);
+      document.getElementById("usname_s").value = "";
+      document.getElementById("pswd_s").value = "";
+    } else {
+      setIsResp(true);
+      console.error("Ошибка входа!");
+    }
+  }
+
+    return (
+      <>
+        <center>
+          <h1 className="ls-header">
+            {lsMode ? "Зарегистрируйтесь" : "Войдите"}
+          </h1>
+          <div className="ls-container">
           <input
             id={`usname_${lsMode ? "s" : "l"}`}
             className={notFoundName ? "not-name" : ""}
@@ -128,7 +162,7 @@ export default function LSForms(props) {
           {!isSuccessfully ? (
             <button
               className="count-particles ls-buttton"
-              onClick={lsMode ? signUP : logIn}
+              onClick={lsMode ? signUP : handlerPresslogIn}
             >
               {lsMode ? "sign up" : "log in"}
             </button>

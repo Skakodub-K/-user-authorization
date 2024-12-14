@@ -81,12 +81,12 @@ app.post('/authRegistry', upload.none(), async (req, res) => {
     res.status(200).send();
 });
 
-app.post('/authLogin', upload.none(), async (req, res) => {
+// Клиент изъявляет просьбу залогиниться и мы даем ему шифр
+app.post('/authLoginRequest', upload.none(), async (req, res) => {
     // Доступ к данным формы
     const formData = req.body;
     console.log(formData);
     
-    const encryptedText = formData.encryptedText;
     const username = formData.username;
 
     const fs = require('fs'); // Модуль для работы с файловой системой
@@ -97,6 +97,7 @@ app.post('/authLogin', upload.none(), async (req, res) => {
         console.error('Ошибка при обработке файла:', err);
         return res.status(500).send();
     }
+    
     // Парсинг содержимого файла в объект
     const users = JSON.parse(data);
     const user = users.find((user, index) => user.username === username);
@@ -104,9 +105,52 @@ app.post('/authLogin', upload.none(), async (req, res) => {
         console.log("Такого пользователя нет!");
         return res.status(400).send();
     }
-              
+    
+    console.log(user.openKey);
+    
+    const message = Math.floor(Math.random() * 100000);
+    const encryptText = String(message);
+    
     console.log('Аутификация прошла успешно.');
-    res.status(200).send();
+    res.status(200).send(
+        encryptText
+    );
+});
+
+// Клиент присылает свой ответ и мы смотрим смог ли он разгадать шифр
+app.post('/authLoginCheck', upload.none(), async (req, res) => {
+    // Доступ к данным формы
+    const formData = req.body;
+    console.log(formData);
+    
+    const username = formData.username;
+
+    const fs = require('fs'); // Модуль для работы с файловой системой
+    let data = null;
+    try {
+        data = await fs.promises.readFile('./users.json', 'utf8');
+    } catch (err) {
+        console.error('Ошибка при обработке файла:', err);
+        return res.status(500).send();
+    }
+    
+    // Парсинг содержимого файла в объект
+    const users = JSON.parse(data);
+    const user = users.find((user, index) => user.username === username);
+    if (!user) {
+        console.log("Такого пользователя нет!");
+        return res.status(400).send();
+    }
+    
+    console.log(user.openKey);
+    
+    const message = Math.floor(Math.random() * 100000);
+    const encryptText = String(message);
+    
+    console.log('Аутификация прошла успешно.');
+    res.status(200).send(
+        encryptText
+    );
 });
 
 app.listen(PORT, () => {
