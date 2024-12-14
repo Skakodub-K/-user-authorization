@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
-
+const math = require('mathjs');
 // Импортируем функции
 const createKeys = require('./createKeys.js'); 
 const generateSignature = require('./generateSignature.js')
@@ -14,6 +14,9 @@ const upload = multer();
 
 app.use(cors());
 app.use(express.json()); // Для парсинга JSON-данных
+
+// Пока сообщение храним тут.
+let message = null;
 
 app.get('/createKeys', (req, res) => {
     const jsonKeys = createKeys();
@@ -107,14 +110,17 @@ app.post('/authLoginRequest', upload.none(), async (req, res) => {
     }
     
     console.log(user.openKey);
+
+    // Пока message - это вектор размера 2
+    message = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
     
-    const message = Math.floor(Math.random() * 100000);
-    const encryptText = String(message);
+    // v = m * B'
+    const ciphr = math.multiply(message, user.openKey);
     
-    console.log('Аутификация прошла успешно.');
-    res.status(200).send(
-        encryptText
-    );
+    console.log('Обработка запроса на выдачу шифра прошла успешно.');
+    res.status(200).send({
+        ciphr: await JSON.stringify(ciphr)
+    });
 });
 
 // Клиент присылает свой ответ и мы смотрим смог ли он разгадать шифр
@@ -124,33 +130,17 @@ app.post('/authLoginCheck', upload.none(), async (req, res) => {
     console.log(formData);
     
     const username = formData.username;
+    const messageFormClient = formData.message;
 
-    const fs = require('fs'); // Модуль для работы с файловой системой
-    let data = null;
-    try {
-        data = await fs.promises.readFile('./users.json', 'utf8');
-    } catch (err) {
-        console.error('Ошибка при обработке файла:', err);
-        return res.status(500).send();
-    }
-    
-    // Парсинг содержимого файла в объект
-    const users = JSON.parse(data);
-    const user = users.find((user, index) => user.username === username);
-    if (!user) {
-        console.log("Такого пользователя нет!");
+    console.log(messageFormClient);
+
+    if (messageFormClient != message) {
+        console.log("Неверный пароль");
         return res.status(400).send();
     }
     
-    console.log(user.openKey);
-    
-    const message = Math.floor(Math.random() * 100000);
-    const encryptText = String(message);
-    
     console.log('Аутификация прошла успешно.');
-    res.status(200).send(
-        encryptText
-    );
+    res.status(200).send();
 });
 
 app.listen(PORT, () => {

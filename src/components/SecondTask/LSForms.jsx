@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createOpenKey, encryptText } from "./clientCalc.js";
+import { createOpenKey, encryptText, decryptCiphr} from "./clientCalc.js";
 
 export default function LSForms(props) {
   // Что выбрал юзер: зарегистрироваться или залогиниться
@@ -86,7 +86,7 @@ export default function LSForms(props) {
       setNotFoundPswd(false);
 
       // Отправляем логин на сервер с использованием fetch API и ждем шифр-текст
-      requestCipherForLogIn();
+      requestCipherForLogIn(username, password);
       
     } else {
       getIsValues(username, password);
@@ -94,7 +94,7 @@ export default function LSForms(props) {
   }
 
   // Просим у сервера шифр-текст
-  async function requestCipherForLogIn() {
+  async function requestCipherForLogIn(username, password) {
     const formData = new FormData();
     formData.append("username", username);
     const response = await fetch("http://localhost:5000/authLoginRequest", {
@@ -103,39 +103,32 @@ export default function LSForms(props) {
     });
 
     if (response.ok) {
-      await sendResponeForLogIn(response.body.ciphr)
+      const ciphr = await response.json();
+      await sendResponeForLogIn(username, password, ciphr);
     } else {
       setIsResp(true);
       console.error("Ошибка входа!");
     }
   }
 
-  async function sendResponeForLogIn(ciphr) {
+  async function sendResponeForLogIn(username, password, ciphr) {
     // Расшифровываем шифр
-    const NotCiphr = "";
+    const message = decryptCiphr(JSON.parse(ciphr.ciphr), password);
     
     const formData = new FormData();
     formData.append("username", username);
-    formData.append("NotCiphr", NotCiphr);
+    formData.append("message", message);
 
-    const response = await fetch("http://localhost:5000/authLoginRequest", {
+    const response = await fetch("http://localhost:5000/authLoginCheck", {
       method: "POST",
       body: formData,
     });
 
     if (response.ok) {
-      await sendResponeForLogIn(response.body.ciphr)
-    } else {
-      setIsResp(true);
-      console.error("Ошибка входа!");
-    }
-
-
-    if (response.ok) {
       setIsResp(true);
       setIsSuccessfully(true);
-      document.getElementById("usname_s").value = "";
-      document.getElementById("pswd_s").value = "";
+      document.getElementById("usname_l").value = "";
+      document.getElementById("pswd_l").value = "";
     } else {
       setIsResp(true);
       console.error("Ошибка входа!");

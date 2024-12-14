@@ -1,15 +1,25 @@
 //const { seedrandom } = require("seedrandom");
 
+// Подключаем библиотеку mathjs
+const math = require('mathjs');
+
 function createOpenKey(password) {
     const privateKey = createPrivateKey(password);
-    return multiplyMatrices(privateKey.B, privateKey.U);
+    //B' = U * B
+    return math.multiply(privateKey.U, privateKey.B);
 }
 
 //
 function createPrivateKey(password) {
     return {
-        B: createNonSingularMatrix(2, password),
-        U: [[1, 0], [0, 1]]
+        B: [
+            [7, 0],
+            [0, 3]
+        ],//createNonSingularMatrix(2, password),
+        U: [
+            [2, 3],
+            [3, 5]
+        ]
     };
 }
 
@@ -52,6 +62,10 @@ function determinant(matrix) {
 
 // Перемножение матриц
 function multiplyMatrices(matrixA, matrixB) {
+    if(matrixA.length === 1) {
+
+    }
+    
     // Проверка на совместимость матриц для перемножения
     if (matrixA[0].length !== matrixB.length) {
         throw new Error("Количество столбцов первой матрицы должно равняться количеству строк второй матрицы.");
@@ -103,17 +117,29 @@ function createNonSingularMatrix(n, seed) {
     return matrix;
 }
 
-function encryptCiphr(ciphr, password) {
+function decryptCiphr(ciphr, password) {
     const privateKey = createPrivateKey(password);
-    //multiplyMatrices()
+    
+    let Binverse;
+    let Uinverse;
+
+    try {
+        Binverse = math.inv(privateKey.B);
+        Uinverse = math.inv(privateKey.U);
+    } catch (error) {
+        throw new Error('Невозможно найти обратную матрицу.');
+    }
     
     //ciphr * B-1
-    //округляем rc
+    const ce = math.multiply(ciphr, Binverse);
+    //округляем ce
+    const rc = ce;
     //получаем m = rc * U-1
-    //return m
+    return math.multiply(rc, Uinverse);
 }
 
 module.exports = {
     createOpenKey,
-    encryptText
+    encryptText,
+    decryptCiphr
 };
