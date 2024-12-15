@@ -140,28 +140,28 @@ export default function LSForms(props) {
         <h1 className="ls-header">
           {lsMode ? "Зарегистрируйтесь" : "Войдите"}
         </h1>
-        <div className="ls-container">
-          <input
-            id={`usname_${lsMode ? "s" : "l"}`}
-            className={notFoundName ? "not-name" : ""}
-            placeholder={notFoundName ? "Введите имя" : "username"}
-          />
-          <input
-            id={`pswd_${lsMode ? "s" : "l"}`}
-            className={notFoundName ? "not-pswd" : ""}
-            placeholder={notFoundPswd ? "Введите пароль" : "password"}
-          />
-          {!isSuccessfully ? (
+        {!isSuccessfully ? (
+          <div className="ls-container">
+            <input
+              id={`usname_${lsMode ? "s" : "l"}`}
+              className={notFoundName ? "not-name" : ""}
+              placeholder={notFoundName ? "Введите имя" : "username"}
+            />
+            <input
+              id={`pswd_${lsMode ? "s" : "l"}`}
+              className={notFoundName ? "not-pswd" : ""}
+              placeholder={notFoundPswd ? "Введите пароль" : "password"}
+            />
             <button
               className="count-particles ls-buttton"
               onClick={lsMode ? signUP : handlerPresslogIn}
             >
               {lsMode ? "sign up" : "log in"}
             </button>
-          ) : (
-            <></>
-          )}
-        </div>
+          </div>
+        ) : (
+          <></>
+        )}
         {isResp && getResultIcon(isSuccessfully)}
       </center>
     </>
