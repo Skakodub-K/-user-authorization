@@ -86,13 +86,13 @@ app.post('/authRegistry', upload.none(), async (req, res) => {
 
 // Клиент изъявляет просьбу залогиниться и мы даем ему шифр
 app.post('/authLoginRequest', upload.none(), async (req, res) => {
+    
     // Доступ к данным формы
     const formData = req.body;
-    console.log(formData);
-    
     const username = formData.username;
 
-    const fs = require('fs'); // Модуль для работы с файловой системой
+    // Модуль для работы с файловой системой
+    const fs = require('fs');
     let data = null;
     try {
         data = await fs.promises.readFile('./users.json', 'utf8');
@@ -111,15 +111,27 @@ app.post('/authLoginRequest', upload.none(), async (req, res) => {
     
     console.log(user.openKey);
 
-    // Пока message - это вектор размера 2
-    message = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
+    // Размер просстранства
+    const n = user.openKey.BO.length;
+
+    // M : mi <= M
+    const M = 45;
+
+    // message - сообщение
+    message = Array.from({length: n}, () => Math.floor(Math.random() * M));
     
+    console.log('радиус шума: ', user.openKey.r);
+
     // v = m * B'
-    const ciphr = math.multiply(message, user.openKey);
+    const ciphr = math.multiply(message, user.openKey.BO);
+    // e: считаем вектор шума - он  должен быть в два раза меньше чем самый маленький вектор из базиса
+    const e = Array.from({length: n}, () => Math.floor(Math.random() * user.openKey.r / Math.sqrt(n) ));
+
+    console.log('шум: ', e);
     
     console.log('Обработка запроса на выдачу шифра прошла успешно.');
     res.status(200).send({
-        ciphr: await JSON.stringify(ciphr)
+        ciphr: await JSON.stringify(math.add(ciphr, e))
     });
 });
 
