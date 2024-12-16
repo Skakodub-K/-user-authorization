@@ -106,13 +106,17 @@ function isPrimitive(n) {
     return false; // 0 and 1 are not prime numbers
   }
 
-  for (let i = 2; i <= Math.sqrt(Number(n)); ++i) {
+  if (Number(n) % 2 === 0)
+    return false; // Found a divisor, not prime
+
+  for (let i = 3; i <= Math.sqrt(Number(n)); i+=2) {
     if (Number(n) % i === 0) {
       return false; // Found a divisor, not prime
     }
   }
   return true; // No divisors found, n is prime
 }
+
 function eulerPhi(n) {
   return n - BigInt(1);
 }

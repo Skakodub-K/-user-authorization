@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import hashFile from "../hash";
+import hashFile from "../../hash";
 import DragAndDrop from "./DragAndDrop";
 
 export default function CreateForm() {

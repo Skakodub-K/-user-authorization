@@ -1,6 +1,6 @@
-import CreateForm from "./createForm";
-import CheckForm from "./checkForm";
-import LSForms from "./LSForms";
+import CreateForm from "./FirstTask/createForm";
+import CheckForm from "./FirstTask/checkForm";
+import LSForms from "./SecondTask/LSForms";
 export default function WindowForm(props) {
   /* Mode - 3 type:
         1- createECP 

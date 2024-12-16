@@ -1,6 +1,6 @@
 import { useState } from "react";
 import DragAndDrop from "./DragAndDrop";
-import hashFile from "../hash";
+import hashFile from "../../hash";
 
 export default function CheckForm() {
   // Файл
